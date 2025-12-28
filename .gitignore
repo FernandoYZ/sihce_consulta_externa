@@ -50,3 +50,4 @@ bun.lock
 
 # Dependencias de Go
 go.sum
+*_templ.go
