@@ -1,0 +1,170 @@
+package layouts
+
+import "sihce_consulta_externa/internal/views/partials"
+
+// BaseLayout es el layout base para todas las páginas con sidebar y navbar
+templ BaseLayout(title string, pageTitle string, pageSubtitle string) {
+	<!DOCTYPE html>
+	<html lang="es-PE">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>{ title } - SIHCE</title>
+
+			<!-- Preconnect para CDNs -->
+			<link rel="preconnect" href="https://fonts.googleapis.com"/>
+			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+			<link rel="preconnect" href="https://unpkg.com"/>
+
+			<!-- Favicon y CSS -->
+			<link rel="icon" href="/favicon.avif" type="image/avif"/>
+			<link href="/dist/styles.css" rel="stylesheet"/>
+			<script src="https://cdn.tailwindcss.com"></script>
+
+			<!-- Preload scripts críticos -->
+			<link rel="preload" href="/dist/htmx.min.js" as="script"/>
+			<link rel="preload" href="/dist/collapse.alpine.min.js" as="script"/>
+			<link rel="preload" href="/dist/alpine.min.js" as="script"/>
+
+			<!-- Fuentes -->
+			<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+			<!-- HTMX para interactividad -->
+			<script src="/dist/htmx.min.js"></script>
+
+			<!-- Lucide Icons -->
+			<script src="https://unpkg.com/lucide@latest"></script>
+
+			<!-- Estilos personalizados -->
+			<style>
+				:root {
+					--sidebar-width: 250px;
+				}
+				body {
+					font-family: 'Inter', sans-serif;
+					background-color: #f0f4f8;
+				}
+
+				/* Sidebar Animations */
+				#sidebar {
+					width: var(--sidebar-width);
+					transition: transform 0.2s ease-in-out;
+				}
+
+				#sidebar.hidden-desktop {
+					margin-left: calc(var(--sidebar-width) * -1);
+				}
+
+				/* Main content - Evitar flash con margin-left por defecto en desktop */
+				#main-content {
+					transition: margin-left 0.2s ease-in-out;
+				}
+
+				/* Por defecto en desktop (>= 1024px), aplicar margin-left para el sidebar */
+				@media (min-width: 1024px) {
+					#main-content {
+						margin-left: var(--sidebar-width);
+					}
+
+					/* Cuando el sidebar está oculto en desktop */
+					#main-content.sidebar-hidden {
+						margin-left: 0;
+					}
+				}
+
+				[x-cloak] { display: none !important; }
+
+				.custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
+				.custom-scroll::-webkit-scrollbar-track { background: transparent; }
+				.custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+				/* Table Styles */
+				th { font-weight: 700; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; background-color: #f8fafc; }
+				td { font-size: 0.8rem; color: #334155; vertical-align: middle; }
+
+				/* Switch Styles */
+				.toggle-checkbox:checked {
+					right: 0;
+					border-color: #2563eb;
+				}
+				.toggle-checkbox:checked + .toggle-label {
+					background-color: #2563eb;
+				}
+
+				/* Select Appearance */
+				select {
+					-webkit-appearance: none;
+					-moz-appearance: none;
+					appearance: none;
+				}
+			</style>
+		</head>
+		<body class="text-slate-900 antialiased overflow-x-hidden bg-slate-50" x-data="layout()" x-init="initLayout()">
+			<!-- Sidebar -->
+			@partials.Sidebar()
+
+			<!-- Main Content -->
+			<main id="main-content" class="min-h-screen transition-all duration-200" x-bind:class="{ 'sidebar-hidden': !sidebarOpen && !isMobile }">
+				<!-- Navbar -->
+				@partials.Navbar(pageTitle, pageSubtitle)
+
+				<!-- Page Content -->
+				<div class="p-4 sm:p-6">
+					<div class="max-w-[95rem] mx-auto space-y-5">
+						{ children... }
+					</div>
+				</div>
+			</main>
+
+			<!-- Alpine.js -->
+			<script defer src="/dist/collapse.alpine.min.js"></script>
+			<script defer src="/dist/alpine.min.js"></script>
+			<script src="/dist/bundle.min.js"></script>
+			<script src="/dist/bundle.js"></script>
+
+			<!-- Inicializar Lucide Icons y Layout -->
+			<script>
+				lucide.createIcons();
+
+				function layout() {
+					return {
+						sidebarOpen: window.innerWidth >= 1024,
+						isMobile: window.innerWidth < 1024,
+
+						// Date Logic
+						isRange: false,
+						dateStart: new Date().toISOString().split('T')[0],
+						dateEnd: new Date().toISOString().split('T')[0],
+
+						initLayout() {
+							this.checkResponsive();
+							window.addEventListener('resize', () => this.checkResponsive());
+
+							// Sincronización inteligente de fechas
+							this.$watch('dateStart', value => {
+								if (!this.isRange) this.dateEnd = value;
+							});
+
+							this.$watch('isRange', value => {
+								if (!value) this.dateEnd = this.dateStart;
+							});
+						},
+
+						checkResponsive() {
+							this.isMobile = window.innerWidth < 1024;
+							if (!this.isMobile) {
+								this.sidebarOpen = true;
+							} else {
+								if (this.sidebarOpen && this.isMobile) this.sidebarOpen = false;
+							}
+						},
+
+						toggleSidebar() {
+							this.sidebarOpen = !this.sidebarOpen;
+						}
+					}
+				}
+			</script>
+		</body>
+	</html>
+}

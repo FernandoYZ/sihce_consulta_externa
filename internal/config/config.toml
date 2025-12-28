@@ -1,0 +1,13 @@
+[jwt]
+access_secret = "${JWT_ACCESS_SECRET}"
+refresh_secret = "${JWT_REFRESH_SECRET}"
+access_token_expiration_seconds = 21600  # 6 horas
+refresh_token_expiration_seconds = 86403  # 3 días
+
+[security]
+session_secret = "${SESSION_SECRET}"
+hash_salt_rounds = 10
+
+[app]
+port = 3206
+app_env = "dev"

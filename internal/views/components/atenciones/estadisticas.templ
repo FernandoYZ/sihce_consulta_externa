@@ -1,0 +1,72 @@
+package atenciones
+
+import http_atenciones "sihce_consulta_externa/internal/modules/atenciones/http"
+
+// Estadisticas componente que muestra las tarjetas de estadísticas
+templ Estadisticas(stats *http_atenciones.EstadisticasAtencion) {
+	<!-- 5 Stats Cards Grid -->
+	<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
+		<!-- Total Citas -->
+		<div class="bg-white px-4 py-2.5 rounded-2xl border border-slate-200 shadow-sm hover:border-blue-300 transition-all group flex items-center justify-between">
+			<div>
+				<p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Total Citas</p>
+				<h3 class="text-2xl font-black text-slate-900 group-hover:text-blue-600 transition-colors">{ formatNumber(stats.TotalCitas) }</h3>
+			</div>
+			<div class="w-11 h-11 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 transition-transform border border-blue-100">
+				<i data-lucide="calendar-days" class="w-5 h-5"></i>
+			</div>
+		</div>
+
+		<!-- Citas Pendientes -->
+		<div class="bg-white px-4 py-2.5 rounded-2xl border border-slate-200 shadow-sm hover:border-amber-300 transition-all group flex items-center justify-between">
+			<div>
+				<p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Pendientes</p>
+				<h3 class="text-2xl font-black text-slate-900 group-hover:text-amber-600 transition-colors">{ formatNumber(stats.CitasPendientes) }</h3>
+			</div>
+			<div class="w-11 h-11 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition-all duration-300 transition-transform border border-amber-100">
+				<i data-lucide="clock" class="w-5 h-5"></i>
+			</div>
+		</div>
+
+		<!-- Citas Atendidas -->
+		<div class="bg-white px-4 py-2.5 rounded-2xl border border-slate-200 shadow-sm hover:border-emerald-300 transition-all group flex items-center justify-between">
+			<div>
+				<p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Atendidas</p>
+				<h3 class="text-2xl font-black text-slate-900 group-hover:text-emerald-600 transition-colors">{ formatNumber(stats.CitasAtendidas) }</h3>
+			</div>
+			<div class="w-11 h-11 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300 transition-transform border border-emerald-100">
+				<i data-lucide="check-circle-2" class="w-5 h-5"></i>
+			</div>
+		</div>
+
+		<!-- Triajes Pendientes -->
+		<div class="bg-white px-4 py-2.5 rounded-2xl border border-slate-200 shadow-sm hover:border-rose-300 transition-all group flex items-center justify-between">
+			<div>
+				<p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Triajes Pend.</p>
+				<h3 class="text-2xl font-black text-slate-900 group-hover:text-rose-600 transition-colors">{ formatNumber(stats.TriajesPendientes) }</h3>
+			</div>
+			<div class="w-11 h-11 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition-all duration-300 transition-transform border border-rose-100">
+				<i data-lucide="thermometer" class="w-5 h-5"></i>
+			</div>
+		</div>
+
+		<!-- Triajes Completados -->
+		<div class="bg-white px-4 py-2.5 rounded-2xl border border-slate-200 shadow-sm hover:border-cyan-300 transition-all group flex items-center justify-between">
+			<div>
+				<p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Triajes Listos</p>
+				<h3 class="text-2xl font-black text-slate-900 group-hover:text-cyan-600 transition-colors">{ formatNumber(stats.TriajesCompletados) }</h3>
+			</div>
+			<div class="w-11 h-11 bg-cyan-50 rounded-xl flex items-center justify-center text-cyan-600 group-hover:bg-cyan-600 group-hover:text-white transition-all duration-300 transition-transform border border-cyan-100">
+				<i data-lucide="clipboard-check" class="w-5 h-5"></i>
+			</div>
+		</div>
+	</div>
+}
+
+// Helper para formatear números
+func formatNumber(n int) string {
+	if n < 10 {
+		return "0" + string(rune(n + '0'))
+	}
+	return string(rune(n/10 + '0')) + string(rune(n%10 + '0'))
+}
