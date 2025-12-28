@@ -1,0 +1,52 @@
+# Binarios generados
+/bin/
+/build/
+/out/
+*/dist/
+/*.exe
+/*.exe~
+/*.dll
+/*.so
+/*.dylib
+
+# Archivos de dependencias (modulos de Go)
+/vendor/
+
+# Configuraciones de Go
+/.idea/
+/.vscode/
+/*.vscode/
+
+# Configuraciones específicas del sistema operativo
+.DS_Store      # macOS
+Thumbs.db      # Windows
+
+# Archivos temporales de editores de texto
+*.swp
+*~
+*.bak
+*.tmp
+
+# Archivos de test de Go
+/testdata/
+*.test
+
+# Archivos de cache
+*.cache
+
+# Archivos de logs
+*.log
+/logs/
+
+# Archivos de configuración con secretos
+.env
+.env.dev
+.env.prod
+
+# Dependencias de Node.js
+/node_modules/
+bun.lockb
+bun.lock
+
+# Dependencias de Go
+go.sum

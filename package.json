@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "js:alpine": "curl -o ./public/dist/alpine.min.js https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js",
+    "js:collapse": "curl -o ./public/dist/collapse.alpine.min.js https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js",
+    "js:htmx": "curl -o ./public/dist/htmx.min.js https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js",
+    "js:static": "bun run js:alpine && bun run js:collapse && bun run js:htmx",
+    "css:dev": "bunx tailwindcss -i ./assets/css/main.css -o ./public/dist/styles.css --watch",
+    "css:build": "bunx tailwindcss -i ./assets/css/main.css -o ./public/dist/styles.css --minify",
+    "js:dev": "bun build ./assets/js/main.js --outfile=./public/dist/bundle.js --watch",
+    "js:build": "bun build ./assets/js/main.js --outfile=./public/dist/bundle.min.js --minify"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.18",
+    "tailwindcss": "^4.1.18"
+  }
+}
